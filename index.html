@@ -258,8 +258,8 @@
     display:grid; place-items:center; position:relative;
   }
   .dex-thumb img{width:100%; height:100%; object-fit:cover}
-  .dex-card.locked .dex-thumb{background:#1b2436; border:1px dashed rgba(148,163,184,.22)}
-  .dex-card.locked .dex-thumb img{filter:brightness(0) opacity(.78)}
+  .dex-card.locked .dex-thumb{background:radial-gradient(circle at 50% 42%, rgba(148,163,184,.10), rgba(11,17,32,0) 72%); border:1px dashed rgba(148,163,184,.2)}
+  .dex-card.locked .dex-thumb img{width:92%; height:92%; object-fit:contain; opacity:.92}
   .dex-card .q{
     position:absolute; font-size:22px; font-weight:800; color:rgba(148,163,184,.55);
   }
@@ -1038,7 +1038,7 @@
       var has = owned.indexOf(c.id) >= 0;
       return '<div class="dex-card'+(has?"":" locked")+'" data-char="'+c.id+'" role="button" tabindex="0" aria-label="'+(has?c.name:"미획득")+'">'+
         '<div class="dex-thumb">'+
-          '<img src="assets/chars/'+c.file+'.webp?v=3" alt="'+(has?c.name:"")+'">'+
+          '<img src="assets/chars/'+(has ? c.file+'.webp' : 'lock'+c.id+'.webp')+'?v=3" alt="'+(has?c.name:"")+'">'+
           (has?"":'<span class="q">?</span>')+
         '</div>'+
         '<div class="dex-name'+(has?"":" dim")+'">'+(has?escapeHtml(c.name):"미획득")+'</div>'+
