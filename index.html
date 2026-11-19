@@ -292,7 +292,7 @@
   .cal-week span:last-child{color:#60a5fa}
   .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
   .day{
-    min-height:96px; border-radius:9px; padding:5px 5px 4px; cursor:pointer;
+    min-height:88px; border-radius:9px; padding:5px 5px 4px; cursor:pointer;
     background:rgba(148,163,184,.045); border:1px solid rgba(148,163,184,.13); overflow:hidden;
     transition:background .15s, border-color .15s;
   }
@@ -319,6 +319,7 @@
   .c-music{background:rgba(139,92,246,.28); color:#ede9fe}
   .c-tutor{background:rgba(16,185,129,.24); color:#d1fae5}
   .c-golf{background:rgba(163,230,53,.22); color:#ecfccb}
+  .c-hol{background:rgba(245,158,11,.3); color:#fef3c7}
 
   .day-panel{
     background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px;
@@ -718,7 +719,7 @@
     { s:"2026-12-05", e:"2026-12-05", title:"아빠 골프", time:"종일", ic:"⛳", cls:"c-golf", meta:"골프" },
     { s:"2026-12-12", e:"2026-12-12", title:"아빠 골프", time:"종일", ic:"⛳", cls:"c-golf", meta:"골프" },
     { s:"2026-12-19", e:"2026-12-19", title:"아빠 골프", time:"종일", ic:"⛳", cls:"c-golf", meta:"골프" },
-    { s:"2026-11-24", e:"2026-11-24", title:"휴교 (베트남 문화의 날)", time:"종일", ic:"🎌", cls:"c-school", meta:"학사 일정" },
+    { s:"2026-11-24", e:"2026-11-24", title:"휴교 (베트남 문화의 날)", time:"종일", ic:"🎌", cls:"c-hol", meta:"학사 일정" },
     { s:"2026-11-24", e:"2026-11-24", title:"학부모 설문 마감", time:"마감", ic:"📝", cls:"c-school", meta:"응답 10분 · 개인 링크" },
     { s:"2026-11-28", e:"2026-11-29", title:"싱가포르 가족여행", time:"1박 2일", ic:"✈️", cls:"c-trip", meta:"1박 2일 · 이른 아침 출발" },
     { s:"2026-11-28", e:"2026-11-28", title:"학교 크리스마스 바자", time:"종일", ic:"🎪", cls:"c-school", meta:"학사 일정" },
@@ -728,7 +729,16 @@
     { s:"2026-12-17", e:"2026-12-17", title:"1학기 종업식", time:"종일", ic:"📘", cls:"c-school", meta:"학사 일정" },
     { s:"2026-12-18", e:"2027-01-05", title:"겨울 · 크리스마스 방학", time:"방학", ic:"❄️", cls:"c-break", meta:"1/4~5 교직원 연수" },
     { s:"2026-12-18", e:"2026-12-18", title:"2학기 등록금 납부 기한", time:"마감", ic:"🧾", cls:"c-money", meta:"납부 방식 확인" },
-    { s:"2026-12-18", e:"2027-01-04", title:"주니어 수영 10회", time:"10회", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 트레이닝" },
+    { s:"2026-12-18", e:"2026-12-18", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 1회차" },
+    { s:"2026-12-20", e:"2026-12-20", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 2회차" },
+    { s:"2026-12-21", e:"2026-12-21", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 3회차" },
+    { s:"2026-12-23", e:"2026-12-23", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 4회차" },
+    { s:"2026-12-25", e:"2026-12-25", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 5회차" },
+    { s:"2026-12-27", e:"2026-12-27", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 6회차" },
+    { s:"2026-12-28", e:"2026-12-28", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 7회차" },
+    { s:"2026-12-30", e:"2026-12-30", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 8회차" },
+    { s:"2027-01-03", e:"2027-01-03", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 9회차" },
+    { s:"2027-01-04", e:"2027-01-04", title:"주니어 수영", time:"06:00–08:00", ic:"🏊", cls:"c-swim", meta:"율 · 겨울방학 Jr 10회차" },
     { s:"2027-01-06", e:"2027-01-06", title:"2학기 개학", time:"종일", ic:"🏫", cls:"c-school", meta:"학사 일정" },
     { s:"2027-01-06", e:"2027-01-06", title:"서균 생일", time:"종일", ic:"🎂", cls:"c-birthday", meta:"생일" },
     { s:"2027-01-16", e:"2027-01-16", title:"수영대회 (스프린트)", time:"07:00~17:00", ic:"🥇", cls:"c-swim", meta:"율 · AIS 뉴이어 스프린트" },
