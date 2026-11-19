@@ -166,20 +166,6 @@
   .facts li::before{content:""; position:absolute; left:1px; top:9px; width:4px; height:4px; border-radius:50%; background:var(--line)}
   .facts b{color:var(--ink); font-weight:650}
 
-  .todo-title{display:flex; align-items:center; justify-content:space-between; margin:0 0 5px}
-  .todo-title .lbl{font-size:11.2px; font-weight:700; color:var(--ink-2); letter-spacing:.02em}
-  .todo-title .done-count{font-size:10.8px; color:var(--ink-3)}
-  .todo{list-style:none; margin:0; padding:0; display:grid; gap:4px}
-  .todo label{display:flex; align-items:center; gap:8px; padding:5px 9px; border-radius:9px;
-    background:#FCFAF7; border:1px solid var(--line-2); cursor:pointer; font-size:12.4px;
-    transition:background .15s, border-color .15s, color .15s}
-  .todo input{appearance:none; -webkit-appearance:none; width:16px; height:16px; margin:0;
-    border:1.5px solid #DCD0C4; border-radius:5px; background:#fff; flex:0 0 auto; position:relative; cursor:pointer}
-  .todo input:checked{background:var(--sage); border-color:var(--sage)}
-  .todo input:checked::after{content:""; position:absolute; left:4.5px; top:1px; width:4px; height:9px;
-    border:solid #fff; border-width:0 2px 2px 0; transform:rotate(42deg)}
-  .todo input:checked + span{color:var(--ink-3); text-decoration:line-through}
-
   .stickers{margin-top:9px; padding-top:8px; border-top:1px dashed var(--line)}
   .sticker-top{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:5px}
   .sticker-top .lbl{font-size:11.2px; font-weight:700; color:var(--ink-2); letter-spacing:.02em}
@@ -330,8 +316,8 @@
     <section class="col">
       <div class="card">
         <div class="sec-head">
-          <h2>⭐ 서균 &amp; 율 — 오늘의 할 일</h2>
-          <span class="sub">할 일을 다 하면 스티커 1개</span>
+          <h2>⭐ 서균 &amp; 율 — 칭찬 스티커</h2>
+          <span class="sub">칭찬할 일이 있으면 스티커 1개</span>
         </div>
 
         <div class="kids">
@@ -352,14 +338,6 @@
               <li>수학 클럽 선발(2026-10)</li>
               <li>챙길 것 — <b>2학기 등록금 납부 12/18</b></li>
               <li>1/20~22 무이네 수련회</li>
-            </ul>
-
-            <div class="todo-title"><span class="lbl">오늘의 할 일</span><span class="done-count" data-count>0 / 4</span></div>
-            <ul class="todo">
-              <li><label><input type="checkbox" data-task><span>숙제 끝내기</span></label></li>
-              <li><label><input type="checkbox" data-task><span>책 읽기</span></label></li>
-              <li><label><input type="checkbox" data-task><span>양치 (아침·저녁)</span></label></li>
-              <li><label><input type="checkbox" data-task><span>정리정돈 (가방·책상·장난감)</span></label></li>
             </ul>
 
             <div class="stickers">
@@ -392,14 +370,6 @@
               <li>수영 대표팀 · 축구 · T-Ball</li>
               <li>다음 대회 — <b>AIS 1/16</b> → <b>FOBISIA 태국 1/21~24</b></li>
               <li>겨울방학 Jr 수영 12/18~1/4 (10회)</li>
-            </ul>
-
-            <div class="todo-title"><span class="lbl">오늘의 할 일</span><span class="done-count" data-count>0 / 4</span></div>
-            <ul class="todo">
-              <li><label><input type="checkbox" data-task><span>숙제 끝내기</span></label></li>
-              <li><label><input type="checkbox" data-task><span>책 읽기</span></label></li>
-              <li><label><input type="checkbox" data-task><span>양치 (아침·저녁)</span></label></li>
-              <li><label><input type="checkbox" data-task><span>정리정돈 (가방·책상·장난감)</span></label></li>
             </ul>
 
             <div class="stickers">
@@ -661,7 +631,6 @@
     var kid = card.getAttribute('data-kid');
     var slots = card.querySelector('[data-slots]');
     var total = card.querySelector('[data-total]');
-    var count = card.querySelector('[data-count]');
 
     for (var i = 0; i < 10; i++) {
       var s = document.createElement('button');
@@ -679,28 +648,10 @@
         el.textContent = i < n ? '⭐' : '';
       });
     }
-    function paintChecks() {
-      var boxes = card.querySelectorAll('[data-task]');
-      var done = 0;
-      boxes.forEach(function (b, i) {
-        var on = !!(state.checks && state.checks[kid + i]);
-        b.checked = on;
-        if (on) done++;
-      });
-      if (count) count.textContent = done + ' / ' + boxes.length;
-    }
     function setName(n) {
       state[kid] = Math.max(0, Math.min(10, n));
       paintStickers(); save();
     }
-
-    card.querySelectorAll('[data-task]').forEach(function (box, i) {
-      box.addEventListener('change', function () {
-        state.checks = state.checks || {};
-        state.checks[kid + i] = box.checked;
-        paintChecks(); save();
-      });
-    });
 
     slots.addEventListener('click', function (e) {
       var b = e.target.closest('[data-slot]');
@@ -719,13 +670,10 @@
     var reset = card.querySelector('[data-reset]');
     if (reset) reset.addEventListener('click', function () {
       setName(0);
-      card.querySelectorAll('[data-task]').forEach(function (b, i) {
-        state.checks = state.checks || {}; state.checks[kid + i] = false;
-      });
-      paintChecks(); save(); toast('오늘 기록을 비웠어요');
+      save(); toast('스티커를 초기화했어요');
     });
 
-    paintStickers(); paintChecks();
+    paintStickers();
   });
 })();
 </script>
