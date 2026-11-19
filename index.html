@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF7F3">
+<title>🏠 우리 가족 보드</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+  /* ── 기본 ───────────────────────────────────────────── */
+  :root{
+    --bg:#FAF7F3; --card:#FFFFFF; --line:#EDE4D9; --line-2:#F3ECE3;
+    --ink:#3A3330; --ink-2:#7A6E64; --ink-3:#A2968B;
+    --terracotta:#C0704B; --terracotta-soft:#FBEEE7;
+    --sage:#6F8B6A; --sage-soft:#EEF3EA;
+    --blue:#4E7CA8; --blue-soft:#E9F1F9;
+    --peach:#D3754E; --peach-soft:#FCEDE3;
+    --amber:#B4813A; --amber-soft:#FBF0DA;
+    --radius:18px;
+    --shadow:0 1px 2px rgba(58,51,48,.04), 0 8px 24px -14px rgba(58,51,48,.16);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Apple SD Gothic Neo","Pretendard","Pretendard Variable","Noto Sans KR","Noto Sans CJK KR",
+                system-ui,-apple-system,"Malgun Gothic","Segoe UI",Roboto,sans-serif;
+    font-size:14px; line-height:1.5; letter-spacing:-.01em;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(12px,2.4vw,26px) clamp(12px,2.4vw,24px) 32px;
+  }
+  h2{margin:0; font-size:15px; letter-spacing:-.02em}
+  h3{margin:0; font-size:14px; letter-spacing:-.02em}
+  .muted{color:var(--ink-2)}
+  .tiny{font-size:11.8px; color:var(--ink-2)}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:14px 16px;
+  }
+  .sec-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin:0 0 8px}
+  .sec-head .sub{font-size:11.8px; color:var(--ink-3)}
+
+  /* ── 헤더 ──────────────────────────────────────────── */
+  .hero{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:0 2px 12px}
+  .kicker{font-size:12px; color:var(--ink-2); letter-spacing:.02em}
+  .hero h1{margin:2px 0 3px; font-size:clamp(22px,2.6vw,30px); line-height:1.15; letter-spacing:-.035em}
+  .hero .members{font-size:13px; color:var(--ink-2); margin:0}
+  .hero .members b{color:var(--ink); font-weight:700}
+  .hero-side{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .birthdays{font-size:12px; color:var(--ink-2); background:var(--card); border:1px solid var(--line);
+    border-radius:999px; padding:5px 12px; box-shadow:var(--shadow); white-space:nowrap}
+  .birthdays b{color:var(--ink); font-weight:700}
+  .avatars{display:flex; align-items:center}
+  .av{width:38px; height:38px; border-radius:50%; display:grid; place-items:center;
+    font-size:13px; font-weight:700; border:2px solid var(--card);
+    margin-left:-9px; box-shadow:0 2px 6px rgba(58,51,48,.10)}
+  .av:first-child{margin-left:0}
+  .av.mom{background:var(--terracotta-soft); color:#A75B38}
+  .av.dad{background:var(--sage-soft); color:#55704F}
+  .av.sg{background:var(--blue-soft); color:#3C688F}
+  .av.yl{background:var(--peach-soft); color:#BE6039}
+
+  /* ── 보드(열) ──────────────────────────────────────── */
+  .board{display:flex; flex-direction:column; gap:12px}
+  .col{display:flex; flex-direction:column; gap:12px; min-width:0}
+
+  /* ── 달력 ──────────────────────────────────────────── */
+  .cal-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px}
+  .cal-head h2{font-size:15px; letter-spacing:-.02em}
+  .cal-nav{display:flex; align-items:center; gap:4px}
+  .cal-nav button{
+    appearance:none; border:1px solid var(--line); background:#fff; color:var(--ink-2);
+    font:inherit; font-size:12px; font-weight:700; width:26px; height:26px; border-radius:9px;
+    cursor:pointer; display:grid; place-items:center; padding:0;
+  }
+  .cal-nav button.wide{width:auto; padding:0 9px; font-weight:600; color:var(--ink-3)}
+  .cal-nav button:active{background:var(--line-2)}
+  .cal-week{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:3px}
+  .cal-week span{text-align:center; font-size:10.5px; font-weight:700; color:var(--ink-3)}
+  .cal-week span:first-child{color:#C0704B}
+  .cal-week span:last-child{color:#4E7CA8}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px}
+  .cal-cell{
+    appearance:none; border:0; background:transparent; font:inherit; color:var(--ink);
+    border-radius:9px; padding:4px 0 5px; min-height:38px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:3px;
+  }
+  .cal-cell .d{font-size:12px; font-weight:600; line-height:1.1}
+  .cal-cell.dim .d{color:var(--ink-3); opacity:.6}
+  .cal-cell.sun .d{color:#B4634A}
+  .cal-cell.today{background:var(--terracotta-soft)}
+  .cal-cell.today .d{color:#A9552F; font-weight:800}
+  .cal-cell.has:hover{background:var(--line-2)}
+  .cal-cell.sel{outline:2px solid var(--terracotta); outline-offset:-2px}
+  .dots{display:flex; gap:2px; height:5px}
+  .dot{width:4px; height:4px; border-radius:50%; background:var(--line); display:block}
+  .dot.school{background:var(--sage)}
+  .dot.trip{background:var(--blue)}
+  .dot.swim{background:#5A8CA0}
+  .dot.money{background:var(--terracotta)}
+  .dot.birthday{background:var(--amber)}
+  .dot.break{background:#C9B79F}
+  .cal-day{margin-top:8px; padding-top:8px; border-top:1px dashed var(--line)}
+  .cal-day .day-head{display:flex; align-items:baseline; gap:6px; margin-bottom:4px}
+  .cal-day .day-head b{font-size:12.5px}
+  .cal-day .day-head span{font-size:11px; color:var(--ink-3)}
+  .cal-day ul{list-style:none; margin:0; padding:0; display:grid; gap:3px}
+  .cal-day li{font-size:12px; color:var(--ink-2); padding-left:11px; position:relative; line-height:1.35}
+  .cal-day li::before{content:""; position:absolute; left:1px; top:6px; width:4px; height:4px; border-radius:50%; background:var(--line)}
+  .cal-day li b{color:var(--ink); font-weight:650}
+  .cal-day .none{font-size:12px; color:var(--ink-3)}
+
+  /* ── 일정 ──────────────────────────────────────────── */
+  .events{list-style:none; margin:0; padding:0}
+  .ev{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:9px; align-items:start;
+    padding:8px 0; border-top:1px solid var(--line-2)}
+  .ev:first-child{border-top:0; padding-top:2px}
+  .ev .date{font-size:11.6px; font-weight:700; color:var(--ink-2); line-height:1.3;
+    letter-spacing:-.02em; white-space:nowrap; padding-top:2px; min-width:44px}
+  .ev .date span{display:block; font-weight:500; color:var(--ink-3); font-size:10.8px}
+  .ev .what{min-width:0}
+  .ev .title{font-size:13.4px; font-weight:650; letter-spacing:-.02em; display:flex; align-items:center; gap:5px; flex-wrap:wrap}
+  .ev .meta{font-size:11.8px; color:var(--ink-2); margin-top:1px}
+  .dday{font-size:10.8px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap;
+    background:var(--line-2); color:var(--ink-2); font-variant-numeric:tabular-nums}
+  .dday.soon{background:var(--terracotta-soft); color:#A9552F}
+  .dday.mid{background:var(--sage-soft); color:#55704F}
+  .tag{font-size:10px; font-weight:700; padding:1px 6px; border-radius:5px; letter-spacing:.01em;
+    background:var(--line-2); color:var(--ink-2)}
+  .tag.school{background:var(--sage-soft); color:#55704F}
+  .tag.trip{background:var(--blue-soft); color:#3C688F}
+  .tag.money{background:var(--terracotta-soft); color:#A9552F}
+  .tag.swim{background:#E7F2F6; color:#2F6E86}
+  .tag.birthday{background:var(--amber-soft); color:var(--amber)}
+  .tag.break{background:#F3EDE4; color:#8A7B6A}
+
+  /* ── 스쿨버스 ──────────────────────────────────────── */
+  table.bus{width:100%; border-collapse:collapse; font-size:12.2px}
+  table.bus th{text-align:left; font-size:10.8px; color:var(--ink-3); font-weight:600;
+    padding:0 0 5px; border-bottom:1px solid var(--line-2)}
+  table.bus td{padding:6px 0; border-bottom:1px solid var(--line-2); vertical-align:middle}
+  table.bus tr:last-child td{border-bottom:0}
+  table.bus tr.today td{background:#FDF6EF}
+  table.bus tr.today td:first-child{border-radius:8px 0 0 8px}
+  table.bus tr.today td:last-child{border-radius:0 8px 8px 0}
+  table.bus .day{font-weight:700; white-space:nowrap}
+  .now{font-size:9.5px; font-weight:800; color:#fff; background:var(--terracotta);
+    border-radius:5px; padding:1px 5px; margin-left:5px; vertical-align:1px}
+  .bus-note{margin-top:8px; font-size:11.6px; color:var(--ink-2); background:#FBF8F4;
+    border:1px dashed var(--line); border-radius:11px; padding:7px 10px}
+
+  /* ── 아이들 ────────────────────────────────────────── */
+  .kids{display:grid; gap:12px}
+  .kid{background:#FCFCFD; border:1px solid #E4EAF1; border-radius:15px; padding:12px 14px}
+  .kid.yul{background:#FFFCFA; border-color:#F4E3D7}
+  .kid-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  .kid-av{width:38px; height:38px; border-radius:12px; display:grid; place-items:center; font-weight:800; font-size:14px}
+  .kid-av.sg{background:var(--blue-soft); color:#3C688F}
+  .kid-av.yl{background:var(--peach-soft); color:#BE6039}
+  .kid-name{font-size:15px; font-weight:750; letter-spacing:-.02em; line-height:1.2}
+  .kid-sub{font-size:11.2px; color:var(--ink-2)}
+  .chips{display:flex; flex-wrap:wrap; gap:4px; margin:0 0 8px}
+  .chip{font-size:11.2px; padding:2px 8px; border-radius:999px; background:#F7F2EC; color:#6B5F55; border:1px solid var(--line-2)}
+  .facts{margin:0 0 10px; padding:0; list-style:none; font-size:12px; color:var(--ink-2)}
+  .facts li{padding:2px 0 2px 12px; position:relative; line-height:1.45}
+  .facts li::before{content:""; position:absolute; left:1px; top:9px; width:4px; height:4px; border-radius:50%; background:var(--line)}
+  .facts b{color:var(--ink); font-weight:650}
+
+  .todo-title{display:flex; align-items:center; justify-content:space-between; margin:0 0 5px}
+  .todo-title .lbl{font-size:11.2px; font-weight:700; color:var(--ink-2); letter-spacing:.02em}
+  .todo-title .done-count{font-size:10.8px; color:var(--ink-3)}
+  .todo{list-style:none; margin:0; padding:0; display:grid; gap:4px}
+  .todo label{display:flex; align-items:center; gap:8px; padding:5px 9px; border-radius:9px;
+    background:#FCFAF7; border:1px solid var(--line-2); cursor:pointer; font-size:12.4px;
+    transition:background .15s, border-color .15s, color .15s}
+  .todo input{appearance:none; -webkit-appearance:none; width:16px; height:16px; margin:0;
+    border:1.5px solid #DCD0C4; border-radius:5px; background:#fff; flex:0 0 auto; position:relative; cursor:pointer}
+  .todo input:checked{background:var(--sage); border-color:var(--sage)}
+  .todo input:checked::after{content:""; position:absolute; left:4.5px; top:1px; width:4px; height:9px;
+    border:solid #fff; border-width:0 2px 2px 0; transform:rotate(42deg)}
+  .todo input:checked + span{color:var(--ink-3); text-decoration:line-through}
+
+  .stickers{margin-top:9px; padding-top:8px; border-top:1px dashed var(--line)}
+  .sticker-top{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:5px}
+  .sticker-top .lbl{font-size:11.2px; font-weight:700; color:var(--ink-2); letter-spacing:.02em}
+  .count{display:inline-flex; align-items:baseline; gap:3px; font-weight:800; font-size:15px; letter-spacing:-.02em}
+  .count small{font-size:10.5px; font-weight:600; color:var(--ink-3)}
+  .slots{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:7px}
+  .slot{width:22px; height:22px; border-radius:50%; background:#F6F1EB; border:1px dashed #DED2C5;
+    display:grid; place-items:center; font-size:11px; line-height:1; cursor:pointer}
+  .slot.on{background:#FFF6E5; border:1px solid #F2D9A8; box-shadow:inset 0 0 0 1px #FDF3DF}
+  .sticker-btns{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+  .btn{appearance:none; border:1px solid var(--line); background:#fff; color:var(--ink);
+    font:inherit; font-size:12px; font-weight:700; padding:6px 11px; border-radius:9px;
+    cursor:pointer; display:inline-flex; align-items:center; gap:5px;
+    box-shadow:0 1px 1px rgba(58,51,48,.04)}
+  .btn.primary{background:var(--terracotta); border-color:var(--terracotta); color:#fff}
+  .btn.primary.sg{background:#4E7CA8; border-color:#4E7CA8}
+  .btn.primary.yl{background:#D3754E; border-color:#D3754E}
+  .btn.ghost{background:transparent; border-color:transparent; color:var(--ink-3); font-weight:600; padding:6px 4px}
+  .need{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600;
+    color:var(--amber); background:var(--amber-soft); border-radius:7px; padding:2px 8px}
+
+  /* ── 여행 ──────────────────────────────────────────── */
+  .trip{position:relative; overflow:hidden; padding:11px 14px 11px 18px; border-radius:15px;
+    border:1px solid var(--line); background:#fff}
+  .trip .bar{position:absolute; left:0; top:10px; bottom:10px; width:4px; border-radius:2px; background:var(--sage)}
+  .trip.sg .bar{background:var(--blue)}
+  .trip.mel .bar{background:var(--terracotta)}
+  .trips{display:grid; gap:8px}
+  .trip-head{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .trip h3{font-size:13.6px}
+  .trip .when{font-size:11.4px; color:var(--ink-2); margin:1px 0 3px}
+  .trip .rows{font-size:11.8px; color:var(--ink-2); line-height:1.45}
+  .trip .rows b{color:var(--ink); font-weight:650}
+  .state{font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:6px; white-space:nowrap}
+  .state.ok{background:var(--sage-soft); color:#4F6B49}
+  .state.wait{background:var(--amber-soft); color:var(--amber)}
+
+  /* ── 연락처 ────────────────────────────────────────── */
+  .contacts{list-style:none; margin:0; padding:0; display:grid; gap:0}
+  .contacts li{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; padding:6px 0; border-top:1px solid var(--line-2)}
+  .contacts li:first-child{border-top:0; padding-top:0}
+  .contacts .who{font-size:12.4px; font-weight:650}
+  .contacts .role{font-size:11px; color:var(--ink-3)}
+  .contacts .how{font-size:11.4px; color:var(--blue); text-align:right; word-break:break-all; align-self:center}
+  .contacts .how.na{color:var(--amber)}
+
+  footer{margin:14px 4px 0; font-size:11px; color:var(--ink-3); display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between}
+  .toast{position:fixed; left:50%; bottom:18px; transform:translate(-50%,14px);
+    background:#3A3330; color:#fff; font-size:12px; font-weight:600; padding:8px 15px;
+    border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:9}
+  .toast.on{opacity:1; transform:translate(-50%,0)}
+
+  /* ── 아이패드 가로: 3열 한 화면 ─────────────────────── */
+  @media (min-width:1000px){
+    body{height:100dvh; overflow:hidden; padding:12px 16px 10px; font-size:13.6px}
+    .app{height:100%; display:flex; flex-direction:column; min-height:0}
+    .hero{padding-bottom:9px; flex-wrap:nowrap}
+    .hero h1{font-size:23px}
+    .hero .members{font-size:12.4px}
+    .hero-side{gap:10px}
+    .av{width:34px; height:34px; font-size:12px}
+    .board{flex:1; min-height:0; display:grid; gap:12px; grid-template-columns:1.1fr 1fr 1fr}
+    .col{min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-right:3px; gap:10px}
+    .col::-webkit-scrollbar{width:6px}
+    .col::-webkit-scrollbar-thumb{background:#E4D9CB; border-radius:3px}
+    .card{padding:12px 14px}
+    footer{display:none}
+  }
+  @media (min-width:1360px){
+    .board{grid-template-columns:1.16fr 1fr 1fr}
+    .events{font-size:1.02em}
+  }
+  @media (max-width:520px){
+    .card{padding:13px 13px; border-radius:15px}
+    .ev{gap:8px}
+    .ev .date{font-size:11px; min-width:40px}
+    .ev .title{font-size:13px}
+    .birthdays{white-space:normal}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── 헤더 ─────────────────────────────────────── -->
+  <header class="hero">
+    <div>
+      <div class="kicker" id="today">2026년 11월 19일 목요일</div>
+      <h1>🏠 우리 가족 위키</h1>
+      <p class="members">엄마 · 아빠 · <b>서균</b> · <b>율</b> <span class="muted">|</span> 우리 가족 한눈에 보기</p>
+    </div>
+    <div class="hero-side">
+      <div class="birthdays">생일 — 엄마 <b>9/18</b> · 아빠 <b>8/30</b> · 서균·율 <b>1/6</b></div>
+      <div class="avatars" aria-hidden="true">
+        <div class="av mom">엄</div><div class="av dad">아</div><div class="av sg">서</div><div class="av yl">율</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="board">
+
+    <!-- ── 열 1: 달력 + 일정 + 스쿨버스 ─────────────── -->
+    <section class="col">
+
+      <div class="card cal">
+        <div class="cal-head">
+          <h2 id="calTitle">2026년 11월</h2>
+          <div class="cal-nav">
+            <button type="button" data-nav="-1" aria-label="이전 달">‹</button>
+            <button type="button" class="wide" data-nav="today">오늘</button>
+            <button type="button" data-nav="1" aria-label="다음 달">›</button>
+          </div>
+        </div>
+        <div class="cal-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-day" id="calDay"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <h2>📅 다가오는 일정</h2>
+          <span class="sub">오늘 기준 남은 날</span>
+        </div>
+        <ul class="events" id="eventList"></ul>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <h2>🚌 주간 스쿨버스</h2>
+          <span class="sub">11/16 ~ 11/20</span>
+        </div>
+        <table class="bus">
+          <thead><tr><th>요일</th><th>등교</th><th>하교</th></tr></thead>
+          <tbody>
+            <tr><td class="day">월 11/16</td><td>둘 다 B22 07:15</td><td>둘 다 CCA 후 16:00 B27</td></tr>
+            <tr><td class="day">화 11/17</td><td>둘 다 B22 07:15</td><td>율 15:00 B65 · 서균 16:00 B66</td></tr>
+            <tr><td class="day">수 11/18</td><td>둘 다 B22 07:15</td><td>둘 다 15:00 B69</td></tr>
+            <tr class="today"><td class="day">목 11/19<span class="now">오늘</span></td><td>둘 다 B22 07:15</td><td>둘 다 15:00 B27</td></tr>
+            <tr><td class="day">금 11/20</td><td>둘 다 B22 07:15</td><td>둘 다 15:00 B22</td></tr>
+          </tbody>
+        </table>
+        <div class="bus-note">하교 때는 <b>성인 대면 인수</b>가 필요합니다. 시간표는 주 단위로 바뀌고 학교 메일로 옵니다.</div>
+      </div>
+
+    </section>
+
+    <!-- ── 열 2: 아이들 ────────────────────────────── -->
+    <section class="col">
+      <div class="card">
+        <div class="sec-head">
+          <h2>⭐ 서균 &amp; 율 — 오늘의 할 일</h2>
+          <span class="sub">할 일을 다 하면 스티커 1개</span>
+        </div>
+
+        <div class="kids">
+
+          <!-- 서균 -->
+          <div class="kid" data-kid="seogyun">
+            <div class="kid-head">
+              <div class="kid-av sg">서</div>
+              <div>
+                <div class="kid-name">서균</div>
+                <div class="kid-sub">5학년 · 생일 1/6</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip">🎮 마인크래프트</span><span class="chip">⚾ 야구</span><span class="chip">⚽ 축구</span>
+            </div>
+            <ul class="facts">
+              <li>수학 클럽 선발(2026-10)</li>
+              <li>챙길 것 — <b>2학기 등록금 납부 12/18</b></li>
+              <li>1/20~22 무이네 수련회</li>
+            </ul>
+
+            <div class="todo-title"><span class="lbl">오늘의 할 일</span><span class="done-count" data-count>0 / 4</span></div>
+            <ul class="todo">
+              <li><label><input type="checkbox" data-task><span>숙제 끝내기</span></label></li>
+              <li><label><input type="checkbox" data-task><span>책 읽기</span></label></li>
+              <li><label><input type="checkbox" data-task><span>양치 (아침·저녁)</span></label></li>
+              <li><label><input type="checkbox" data-task><span>정리정돈 (가방·책상·장난감)</span></label></li>
+            </ul>
+
+            <div class="stickers">
+              <div class="sticker-top">
+                <span class="lbl">모은 칭찬 스티커</span>
+                <span class="count"><span data-total>0</span><small>개</small></span>
+              </div>
+              <div class="slots" data-slots></div>
+              <div class="sticker-btns">
+                <button class="btn primary sg" data-add>⭐ 스티커 붙이기</button>
+                <button class="btn ghost" data-reset>초기화</button>
+              </div>
+              <div class="tiny" style="margin-top:6px"><span class="need">확인 필요</span> 목표 개수·보상은 아직 정하지 않았습니다.</div>
+            </div>
+          </div>
+
+          <!-- 율 -->
+          <div class="kid yul" data-kid="yul">
+            <div class="kid-head">
+              <div class="kid-av yl">율</div>
+              <div>
+                <div class="kid-name">율</div>
+                <div class="kid-sub">5학년 · 생일 1/6</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip">🎮 마인크래프트</span><span class="chip">⚾ 야구</span><span class="chip">⚽ 축구</span>
+            </div>
+            <ul class="facts">
+              <li>수영 대표팀 · 축구 · T-Ball</li>
+              <li>다음 대회 — <b>AIS 1/16</b> → <b>FOBISIA 태국 1/21~24</b></li>
+              <li>겨울방학 Jr 수영 12/18~1/4 (10회)</li>
+            </ul>
+
+            <div class="todo-title"><span class="lbl">오늘의 할 일</span><span class="done-count" data-count>0 / 4</span></div>
+            <ul class="todo">
+              <li><label><input type="checkbox" data-task><span>숙제 끝내기</span></label></li>
+              <li><label><input type="checkbox" data-task><span>책 읽기</span></label></li>
+              <li><label><input type="checkbox" data-task><span>양치 (아침·저녁)</span></label></li>
+              <li><label><input type="checkbox" data-task><span>정리정돈 (가방·책상·장난감)</span></label></li>
+            </ul>
+
+            <div class="stickers">
+              <div class="sticker-top">
+                <span class="lbl">모은 칭찬 스티커</span>
+                <span class="count"><span data-total>0</span><small>개</small></span>
+              </div>
+              <div class="slots" data-slots></div>
+              <div class="sticker-btns">
+                <button class="btn primary yl" data-add>⭐ 스티커 붙이기</button>
+                <button class="btn ghost" data-reset>초기화</button>
+              </div>
+              <div class="tiny" style="margin-top:6px"><span class="need">확인 필요</span> 목표 개수·보상은 아직 정하지 않았습니다.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 열 3: 여행 · 연락처 · 채울 것 ───────────── -->
+    <section class="col">
+
+      <div class="card">
+        <div class="sec-head"><h2>✈️ 여행</h2></div>
+        <div class="trips">
+          <div class="trip hotram">
+            <div class="bar"></div>
+            <div class="trip-head">
+              <h3>호트램 주말여행</h3>
+              <span class="state ok">다녀옴</span>
+            </div>
+            <div class="when">2026-11-13 ~ 11-15 · 2박</div>
+            <div class="rows">골프 11/14 08:06 The Bluffs<br>셔틀 11/13 18:00 → 11/15 16:00</div>
+          </div>
+          <div class="trip sg">
+            <div class="bar"></div>
+            <div class="trip-head">
+              <h3>싱가포르</h3>
+              <span class="state ok">항공·숙소 확정</span>
+            </div>
+            <div class="when">2026-11-28 ~ 11-29 · 1박</div>
+            <div class="rows">05:55 SGN→SIN · 21:50 SIN→SGN<br>스위소텔 스탬포드 · Premier 2 Doubles</div>
+          </div>
+          <div class="trip mel">
+            <div class="bar"></div>
+            <div class="trip-head">
+              <h3>멜버른</h3>
+              <span class="state wait">숙소 미정</span>
+            </div>
+            <div class="when">2027-02-03 ~ 02-10 · 뗏 연휴</div>
+            <div class="rows">젯스타 직항 · 네 명<br>숙소 미정</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <h2>📞 학교·생활 연락처</h2>
+          <span class="sub">비공개로 보관</span>
+        </div>
+        <ul class="facts" style="margin-bottom:0">
+          <li>가족 연락처·병원·관리사무소 번호는 <b>비공개 위키</b>에만 정리해 두었어요.</li>
+          <li>예약번호·생년월일·금액 같은 정보는 이 화면에 올리지 않습니다.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="sec-head">
+          <h2>🧩 위키에 채울 것</h2>
+          <span class="need">확인 필요</span>
+        </div>
+        <ul class="facts" style="margin-bottom:0">
+          <li>결혼일 · 양가 어른들 성함·생신</li>
+          <li>아이들 병원·검진 기록</li>
+          <li>칭찬 스티커 목표 개수 · 보상</li>
+          <li>관리사무소·소아과·치과·가전 AS 번호</li>
+        </ul>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <span>우리 가족 보드 · 2026-11-19 기준</span>
+    <span>‘확인 필요’는 위키에 아직 없는 항목입니다 · 가짜 데이터 없이 실제 페이지만 반영</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var DAY = 86400000;
+  var days = ['일','월','화','수','목','금','토'];
+
+  function ymd(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function parse(s) {
+    var p = s.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+
+  // ── 일정 데이터 (family-wiki 원본 기준) ─────────────
+  var EVENTS = [
+    { s:'2026-11-24', e:'2026-11-24', title:'학부모 설문 마감', meta:'응답 10분 · 개인 링크로', tag:'학교', cls:'school' },
+    { s:'2026-11-28', e:'2026-11-29', title:'싱가포르 가족여행', meta:'1박 2일', tag:'여행', cls:'trip' },
+    { s:'2026-12-02', e:'2026-12-02', title:'Digital Wellbeing 학부모 워크숍', meta:'부모 대상 · 시간·장소는 공지 확인', tag:'학교', cls:'school' },
+    { s:'2026-12-18', e:'2026-12-18', title:'서균 2학기 등록금 납부 기한', meta:'납부 방식 확인', tag:'납부', cls:'money' },
+    { s:'2026-12-18', e:'2027-01-04', title:'겨울방학 Jr 수영 트레이닝 10회', meta:'율 · 겨울방학 10회', tag:'수영', cls:'swim' },
+    { s:'2027-01-06', e:'2027-01-06', title:'서균·율 생일', meta:'쌍둥이 생일', tag:'생일', cls:'birthday' },
+    { s:'2027-01-16', e:'2027-01-16', title:'AIS 뉴이어 스프린트 수영대회', meta:'율 · 07:00~17:00', tag:'수영', cls:'swim' },
+    { s:'2027-01-20', e:'2027-01-22', title:'서균 무이네 수련회', meta:'학교 주관', tag:'학교', cls:'school' },
+    { s:'2027-01-21', e:'2027-01-24', title:'FOBISIA 태국 수영대회', meta:'율 · 태국 (대회 22~24일)', tag:'수영', cls:'swim' },
+    { s:'2027-02-01', e:'2027-02-12', title:'뗏 방학', meta:'개학 2027-02-17', tag:'방학', cls:'break' },
+    { s:'2027-02-03', e:'2027-02-10', title:'멜버른 가족여행', meta:'숙소 미정', tag:'여행', cls:'trip' },
+    { s:'2027-02-24', e:'2027-02-26', title:'율 무이네 수련회', meta:'학교 주관', tag:'학교', cls:'school' }
+  ].map(function (ev) { ev.start = parse(ev.s); ev.end = parse(ev.e); return ev; });
+
+  function eventsOn(d) {
+    return EVENTS.filter(function (ev) { return d >= ev.start && d <= ev.end; });
+  }
+
+  // ── 오늘 날짜 표시 ─────────────────────────────────
+  var t = document.getElementById('today');
+  if (t) t.textContent = today.getFullYear() + '년 ' + (today.getMonth() + 1) + '월 ' + today.getDate() + '일 ' + days[today.getDay()] + '요일';
+
+  // ── 다가오는 일정 목록 ────────────────────────────
+  var list = document.getElementById('eventList');
+  var upcoming = EVENTS.slice().sort(function (a, b) { return a.start - b.start; })
+    .filter(function (ev) { return ev.end >= today; });
+
+  function mmdd(d){ return String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0'); }
+  function range(d1, d2) {
+    var a = mmdd(d1);
+    if (ymd(d1) === ymd(d2)) return a;
+    var b = (d1.getMonth() === d2.getMonth()) ? String(d2.getDate()).padStart(2, '0') : mmdd(d2);
+    return a + '–' + b;
+  }
+  function dday(ev) {
+    var diff = Math.round((ev.start - today) / DAY);
+    var label = diff > 0 ? 'D-' + diff : (diff === 0 ? '오늘' : (ev.end >= today ? '진행 중' : '지남'));
+    var cls = diff >= 0 && diff <= 14 ? ' soon' : (diff > 14 ? ' mid' : '');
+    return '<div class="dday' + cls + '">' + label + '</div>';
+  }
+
+  if (list) {
+    list.innerHTML = upcoming.map(function (ev) {
+      return '<li class="ev">' +
+        '<div class="date">' + range(ev.start, ev.end) + '<span>' + (ymd(ev.start) === ymd(ev.end) ? days[ev.start.getDay()] : '') + '</span></div>' +
+        '<div class="what"><div class="title">' + ev.title + ' <span class="tag ' + ev.cls + '">' + ev.tag + '</span></div>' +
+        '<div class="meta">' + ev.meta + '</div></div>' + dday(ev) + '</li>';
+    }).join('');
+  }
+
+  // ── 달력 ──────────────────────────────────────────
+  var grid = document.getElementById('calGrid');
+  var dayBox = document.getElementById('calDay');
+  var title = document.getElementById('calTitle');
+  var view = new Date(today.getFullYear(), today.getMonth(), 1);
+  var selected = new Date(today);
+
+  function renderDay(d) {
+    var evs = eventsOn(d);
+    var head = '<div class="day-head"><b>' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 · ' + days[d.getDay()] + '요일</b>' +
+      (ymd(d) === ymd(today) ? '<span>오늘</span>' : '') + '</div>';
+    if (!evs.length) {
+      var next = EVENTS.filter(function (ev) { return ev.start > d; }).sort(function (a, b) { return a.start - b.start; })[0];
+      var hint = next ? '다음 일정 — ' + (next.start.getMonth() + 1) + '/' + next.start.getDate() + ' ' + next.title : '';
+      return head + '<div class="none">따로 적힌 일정은 없어요' + (hint ? ' · ' + hint : '') + '</div>';
+    }
+    return head + '<ul>' + evs.map(function (ev) {
+      return '<li><b>' + ev.title + '</b> — ' + ev.meta + '</li>';
+    }).join('') + '</ul>';
+  }
+
+  function renderCal() {
+    var y = view.getFullYear(), m = view.getMonth();
+    if (title) title.textContent = y + '년 ' + (m + 1) + '월';
+    var first = new Date(y, m, 1);
+    var start = new Date(y, m, 1 - first.getDay());
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    var weeks = Math.ceil((first.getDay() + daysInMonth) / 7);
+    var cells = [];
+    for (var i = 0; i < weeks * 7; i++) {
+      var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      var cls = ['cal-cell'];
+      if (d.getMonth() !== m) cls.push('dim');
+      if (d.getDay() === 0) cls.push('sun');
+      if (ymd(d) === ymd(today)) cls.push('today');
+      if (ymd(d) === ymd(selected)) cls.push('sel');
+      var evs = eventsOn(d);
+      if (evs.length) cls.push('has');
+      var dots = '';
+      if (evs.length) {
+        dots = '<span class="dots">' + evs.slice(0, 3).map(function (ev) {
+          return '<i class="dot ' + ev.cls + '"></i>';
+        }).join('') + '</span>';
+      }
+      cells.push('<button type="button" class="' + cls.join(' ') + '" data-date="' + ymd(d) + '" title="' +
+        evs.map(function (ev) { return ev.title; }).join(', ') + '">' +
+        '<span class="d">' + d.getDate() + '</span>' + (dots || '<span class="dots"></span>') + '</button>');
+    }
+    grid.innerHTML = cells.join('');
+    if (dayBox) dayBox.innerHTML = renderDay(selected);
+  }
+
+  if (grid) {
+    grid.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-date]');
+      if (!b) return;
+      var d = parse(b.getAttribute('data-date'));
+      if (d.getMonth() !== view.getMonth() || d.getFullYear() !== view.getFullYear()) {
+        view = new Date(d.getFullYear(), d.getMonth(), 1);
+      }
+      selected = d;
+      renderCal();
+    });
+  }
+
+  document.querySelectorAll('[data-nav]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.getAttribute('data-nav');
+      if (v === 'today') {
+        view = new Date(today.getFullYear(), today.getMonth(), 1);
+        selected = new Date(today);
+      } else {
+        view = new Date(view.getFullYear(), view.getMonth() + parseInt(v, 10), 1);
+      }
+      renderCal();
+    });
+  });
+
+  renderCal();
+
+  // ── 칭찬 스티커판 ─────────────────────────────────
+  var KEY = 'family-board-stickers-v1';
+  var state = { seogyun: 0, yul: 0, checks: {} };
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved) state = Object.assign(state, JSON.parse(saved));
+  } catch (e) {}
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg; el.classList.add('on');
+    clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove('on'); }, 1500);
+  }
+
+  document.querySelectorAll('[data-kid]').forEach(function (card) {
+    var kid = card.getAttribute('data-kid');
+    var slots = card.querySelector('[data-slots]');
+    var total = card.querySelector('[data-total]');
+    var count = card.querySelector('[data-count]');
+
+    for (var i = 0; i < 10; i++) {
+      var s = document.createElement('button');
+      s.type = 'button';
+      s.className = 'slot';
+      s.setAttribute('data-slot', i);
+      slots.appendChild(s);
+    }
+
+    function paintStickers() {
+      var n = state[kid] || 0;
+      if (total) total.textContent = n;
+      slots.querySelectorAll('.slot').forEach(function (el, i) {
+        el.classList.toggle('on', i < n);
+        el.textContent = i < n ? '⭐' : '';
+      });
+    }
+    function paintChecks() {
+      var boxes = card.querySelectorAll('[data-task]');
+      var done = 0;
+      boxes.forEach(function (b, i) {
+        var on = !!(state.checks && state.checks[kid + i]);
+        b.checked = on;
+        if (on) done++;
+      });
+      if (count) count.textContent = done + ' / ' + boxes.length;
+    }
+    function setName(n) {
+      state[kid] = Math.max(0, Math.min(10, n));
+      paintStickers(); save();
+    }
+
+    card.querySelectorAll('[data-task]').forEach(function (box, i) {
+      box.addEventListener('change', function () {
+        state.checks = state.checks || {};
+        state.checks[kid + i] = box.checked;
+        paintChecks(); save();
+      });
+    });
+
+    slots.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-slot]');
+      if (!b) return;
+      setName(Number(b.getAttribute('data-slot')) + 1);
+    });
+
+    var addBtn = card.querySelector('[data-add]');
+    if (addBtn) addBtn.addEventListener('click', function () {
+      var n = state[kid] || 0;
+      if (n >= 10) { toast('칸이 다 찼어요 — 새 판을 만들까요?'); return; }
+      setName(n + 1);
+      toast((kid === 'seogyun' ? '서균' : '율') + ' 스티커 ' + (n + 1) + '개!');
+    });
+
+    var reset = card.querySelector('[data-reset]');
+    if (reset) reset.addEventListener('click', function () {
+      setName(0);
+      card.querySelectorAll('[data-task]').forEach(function (b, i) {
+        state.checks = state.checks || {}; state.checks[kid + i] = false;
+      });
+      paintChecks(); save(); toast('오늘 기록을 비웠어요');
+    });
+
+    paintStickers(); paintChecks();
+  });
+})();
+</script>
+</body>
+</html>
