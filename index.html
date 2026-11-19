@@ -258,8 +258,8 @@
     display:grid; place-items:center; position:relative;
   }
   .dex-thumb img{width:100%; height:100%; object-fit:cover}
-  .dex-card.locked .dex-thumb{background:#131c2d; border:1px dashed rgba(148,163,184,.22)}
-  .dex-card.locked .dex-thumb img{filter:brightness(.12) contrast(1.1); opacity:.9}
+  .dex-card.locked .dex-thumb{background:#1b2436; border:1px dashed rgba(148,163,184,.22)}
+  .dex-card.locked .dex-thumb img{filter:brightness(0) opacity(.78)}
   .dex-card .q{
     position:absolute; font-size:22px; font-weight:800; color:rgba(148,163,184,.55);
   }
@@ -292,7 +292,7 @@
   .cal-week span:last-child{color:#60a5fa}
   .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
   .day{
-    min-height:72px; border-radius:8px; padding:4px; cursor:pointer;
+    min-height:84px; border-radius:8px; padding:4px; cursor:pointer;
     background:rgba(148,163,184,.035); border:1px solid transparent; overflow:hidden;
     transition:background .15s, border-color .15s;
   }
@@ -477,7 +477,7 @@
 
   <nav class="rail" role="tablist" aria-label="가족 보드 메뉴">
     <div class="brand" data-tab="home" title="우리 가족 보드">
-      <img src="assets/chars/char8.webp" alt="보드 마스코트">
+      <img src="assets/chars/char8.webp?v=3" alt="보드 마스코트">
     </div>
     <button class="nav-btn active" data-tab="home" role="tab" aria-selected="true">
       <span class="ico">🏠</span><span>홈</span>
@@ -874,21 +874,20 @@
   }
   function renderHomeEvents(){
     var items = dayItems(today);
-    var box = $("#homeEvents");
     var rows = items.slice(0, 3);
-    if(rows.length === 0){
-      var ups = upcomingEvents(today, 3).filter(function(ev){ return ev.start > today; });
-      rows = ups.map(function(ev){
-        var diff = daysBetween(today, ev.start);
-        return { ic:ev.ic, title:ev.title, time: shortDate(ev.start)+" · D-"+diff, kind:"event" };
-      });
-      if(!rows.length){
-        box.innerHTML = '<div class="dp-empty">오늘은 예정된 일정이 없습니다</div>';
-      }
+    if(rows.length < 3){
+      var extra = upcomingEvents(today, 8).filter(function(ev){ return ev.start > today; })
+        .slice(0, 3 - rows.length).map(function(ev){
+          return { ic:ev.ic, title:ev.title, time: shortDate(ev.start)+" · D-"+daysBetween(today, ev.start), kind:"event" };
+        });
+      rows = rows.concat(extra);
     }
-    if(rows.length) box.innerHTML = rows.map(rowHtml).join("");
+    if(rows.length === 0){
+      $("#homeEvents").innerHTML = '<div class="dp-empty">오늘은 예정된 일정이 없습니다</div>';
+    }
 
-    // 내일 박스
+    var rowsHtml = rows.map(rowHtml).join("");
+    $("#homeEvents").innerHTML = rowsHtml || '<div class="dp-empty">오늘은 예정된 일정이 없습니다</div>';
     var tm = new Date(today); tm.setDate(tm.getDate()+1);
     var tmItems = dayItems(tm);
     var nx = $("#homeNext");
@@ -927,7 +926,7 @@
   }
   function thumb(id, cls){
     var c = charById(id);
-    return c ? '<img class="'+cls+'" src="assets/chars/'+c.file+'.webp" alt="'+c.name+'">' : "";
+    return c ? '<img class="'+cls+'" src="assets/chars/'+c.file+'.webp?v=3" alt="'+c.name+'">' : "";
   }
   function renderHomeSticker(pop){
     var kid = S.kids[S.kid];
@@ -980,7 +979,7 @@
       var has = owned.indexOf(c.id) >= 0;
       return '<div class="dex-card'+(has?"":" locked")+'" data-char="'+c.id+'" role="button" tabindex="0" aria-label="'+(has?c.name:"미획득")+'">'+
         '<div class="dex-thumb">'+
-          '<img src="assets/chars/'+c.file+'.webp" alt="'+(has?c.name:"")+'">'+
+          '<img src="assets/chars/'+c.file+'.webp?v=3" alt="'+(has?c.name:"")+'">'+
           (has?"":'<span class="q">?</span>')+
         '</div>'+
         '<div class="dex-name'+(has?"":" dim")+'">'+(has?escapeHtml(c.name):"미획득")+'</div>'+
@@ -1037,9 +1036,12 @@
         return '<div class="dp-ev"><div class="n">'+(it.ic?it.ic+" ":"")+escapeHtml(it.title)+'</div>'+
           '<div class="m">'+escapeHtml(m)+'</div></div>';
       }).join("");
+      var inBreak = EVENTS.some(function(ev){ return ev.cls === "c-break" && selected >= ev.start && selected <= ev.end; });
+      if(inBreak && WEEKLY[selected.getDay()]){
+        box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간입니다 · 방과후 고정 일정은 달라질 수 있습니다</div>';
+      }
     }
-    var rows = busRows(selected);
-    if(!rows){
+    var rows = busRows(selected);    if(!rows){
       $("#dpBus").innerHTML = '<tr><td colspan="2" style="color:var(--ink-3)">주말 · 스쿨버스 없음</td></tr>';
       $("#dpBusNote").style.display = "none";
     } else {
@@ -1184,7 +1186,7 @@
       cap.classList.add("burst");
       $("#drawStage").style.display = "none";
       $("#revealBox").innerHTML =
-        '<div class="thumb"><img src="assets/chars/'+picked.file+'.webp" alt="'+picked.name+'"></div>'+
+        '<div class="thumb"><img src="assets/chars/'+picked.file+'.webp?v=3" alt="'+picked.name+'"></div>'+
         '<div class="rname">'+escapeHtml(picked.name)+'</div>'+
         '<div class="rline"><span class="type t-'+picked.type+'">'+picked.type+'</span>'+
         '<span style="font-size:11px;color:var(--ink-3);font-weight:600">'+picked.rar+'</span></div>'+
@@ -1220,7 +1222,7 @@
     var has = S.owned.indexOf(id) >= 0;
     if(has){
       $("#charBody").innerHTML =
-        '<div class="reveal"><div class="thumb"><img src="assets/chars/'+c.file+'.webp" alt="'+c.name+'"></div>'+
+        '<div class="reveal"><div class="thumb"><img src="assets/chars/'+c.file+'.webp?v=3" alt="'+c.name+'"></div>'+
         '<div class="rname">'+escapeHtml(c.name)+'</div>'+
         '<div class="rline"><span class="type t-'+c.type+'">'+c.type+'</span>'+
         '<span style="font-size:11px;color:var(--ink-3);font-weight:600">'+c.rar+'</span></div>'+
