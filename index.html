@@ -78,7 +78,7 @@
   .nav-btn{
     width:100%; border:0; background:transparent; border-radius:10px; position:relative;
     display:flex; flex-direction:column; align-items:center; gap:4px; padding:9px 2px 7px;
-    font-size:10.5px; font-weight:600; color:var(--ink-3); cursor:pointer; transition:background .18s,color .18s;
+    font-size:11px; font-weight:600; color:#9aabc2; cursor:pointer; transition:background .18s,color .18s;
   }
   .nav-btn .ico{font-size:16px; line-height:1; filter:grayscale(.55) opacity(.8)}
   .nav-btn:hover{background:rgba(148,163,184,.08); color:var(--ink-2)}
@@ -298,17 +298,17 @@
   }
   .day:hover{background:rgba(148,163,184,.11); border-color:rgba(148,163,184,.28)}
   .day.out{opacity:.3}
-  .day .num{font-size:12.5px; font-weight:700; width:22px; height:22px; border-radius:6px;
+  .day .num{font-size:13.5px; font-weight:700; width:22px; height:22px; border-radius:6px;
     display:grid; place-items:center; margin-bottom:4px; color:#f8fafc; font-variant-numeric:tabular-nums}
   .day.today .num{background:var(--gold); color:#231a02; font-weight:800; box-shadow:0 0 0 3px rgba(251,191,36,.18)}
   .day.sel{border-color:rgba(129,140,248,.9); background:rgba(99,102,241,.12); box-shadow:0 0 0 1px rgba(129,140,248,.35)}
-  .day.vac{background:rgba(16,185,129,.06); border-color:rgba(16,185,129,.2)}
-  .day.hol{background:rgba(245,158,11,.07); border-color:rgba(245,158,11,.24)}
+  .day.vac{background:rgba(16,185,129,.045); border-color:rgba(16,185,129,.16)}
+  .day.hol{background:rgba(245,158,11,.06); border-color:rgba(245,158,11,.2)}
   .chip{
-    display:block; font-size:10.5px; font-weight:600; line-height:1.5; padding:2px 5px; margin-bottom:2px;
+    display:block; font-size:11px; font-weight:600; line-height:1.5; padding:2px 5px; margin-bottom:2px;
     border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-.01em;
   }
-  .chip.wk{display:flex; align-items:center; gap:4px; background:transparent; padding:1px 2px; color:#cbd5e1; font-weight:500}
+  .chip.wk{display:flex; align-items:center; gap:4px; background:transparent; padding:1px 2px; color:#dbe4f0; font-weight:500}
   .chip.wk i{width:5px; height:5px; border-radius:50%; flex:0 0 5px; display:inline-block}
   .c-school{background:rgba(59,130,246,.34); color:#dbeafe}
   .c-trip{background:rgba(139,92,246,.34); color:#ede9fe}
@@ -1087,7 +1087,11 @@
         box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간 · 방과후 일정은 목요일 수영 교정만 표시됩니다</div>';
       }
     }
-    var rows = busRows(selected);    if(!rows){
+    var rows = busRows(selected);
+    if(rows && rows.msg){
+      $("#dpBus").innerHTML = '<tr><td colspan="2" style="color:#cbd5e1">'+rows.msg+'</td></tr>';
+      $("#dpBusNote").style.display = "none";
+    } else if(!rows){
       $("#dpBus").innerHTML = '<tr><td colspan="2" style="color:var(--ink-3)">주말 · 스쿨버스 없음</td></tr>';
       $("#dpBusNote").style.display = "none";
     } else {
