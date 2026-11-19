@@ -1,0 +1,18 @@
+{
+  "name": "우리 가족 보드",
+  "short_name": "가족 보드",
+  "description": "가족 일정, 칭찬 스티커, 친구 도감, 메모를 한 화면에서",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#241752",
+  "theme_color": "#241752",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
