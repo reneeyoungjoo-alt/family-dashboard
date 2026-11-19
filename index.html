@@ -286,34 +286,38 @@
   }
   .nav-pill:hover{background:rgba(148,163,184,.16); color:var(--ink)}
   .nav-pill.gold{background:rgba(251,191,36,.14); border-color:rgba(251,191,36,.3); color:#fde68a}
-  .cal-week{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:5px}
-  .cal-week span{text-align:center; font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:.04em}
+  .cal-week{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:6px}
+  .cal-week span{text-align:center; font-size:11.5px; font-weight:700; color:#94a3b8; letter-spacing:.02em; padding-bottom:2px}
   .cal-week span:first-child{color:#f87171}
   .cal-week span:last-child{color:#60a5fa}
   .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
   .day{
-    min-height:84px; border-radius:8px; padding:4px; cursor:pointer;
-    background:rgba(148,163,184,.035); border:1px solid transparent; overflow:hidden;
+    min-height:96px; border-radius:9px; padding:5px 5px 4px; cursor:pointer;
+    background:rgba(148,163,184,.045); border:1px solid rgba(148,163,184,.13); overflow:hidden;
     transition:background .15s, border-color .15s;
   }
-  .day:hover{background:rgba(148,163,184,.1)}
-  .day.out{opacity:.32}
-  .day .num{font-size:11px; font-weight:600; width:20px; height:20px; border-radius:50%;
-    display:grid; place-items:center; margin-bottom:3px; color:var(--ink-2); font-variant-numeric:tabular-nums}
-  .day.today .num{background:var(--gold); color:#231a02; font-weight:800}
-  .day.sel{border-color:rgba(129,140,248,.85); background:rgba(99,102,241,.1)}
+  .day:hover{background:rgba(148,163,184,.11); border-color:rgba(148,163,184,.28)}
+  .day.out{opacity:.3}
+  .day .num{font-size:12.5px; font-weight:700; width:22px; height:22px; border-radius:6px;
+    display:grid; place-items:center; margin-bottom:4px; color:#f8fafc; font-variant-numeric:tabular-nums}
+  .day.today .num{background:var(--gold); color:#231a02; font-weight:800; box-shadow:0 0 0 3px rgba(251,191,36,.18)}
+  .day.sel{border-color:rgba(129,140,248,.9); background:rgba(99,102,241,.12); box-shadow:0 0 0 1px rgba(129,140,248,.35)}
+  .day.vac{background:rgba(16,185,129,.06); border-color:rgba(16,185,129,.2)}
+  .day.hol{background:rgba(245,158,11,.07); border-color:rgba(245,158,11,.24)}
   .chip{
-    display:block; font-size:9px; font-weight:600; line-height:1.4; padding:1px 4px; margin-bottom:2px;
-    border-radius:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-.01em;
+    display:block; font-size:10.5px; font-weight:600; line-height:1.5; padding:2px 5px; margin-bottom:2px;
+    border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-.01em;
   }
-  .c-school{background:rgba(59,130,246,.22); color:#bfdbfe}
-  .c-trip{background:rgba(167,139,250,.22); color:#ddd6fe}
-  .c-swim{background:rgba(34,211,238,.2); color:#a5f3fc}
-  .c-birthday{background:rgba(251,191,36,.22); color:#fde68a}
-  .c-break{background:rgba(52,211,153,.18); color:#a7f3d0}
-  .c-money{background:rgba(251,146,60,.2); color:#fed7aa}
-  .c-music{background:rgba(167,139,250,.16); color:#e9d5ff}
-  .c-tutor{background:rgba(52,211,153,.16); color:#bbf7d0}
+  .chip.wk{display:flex; align-items:center; gap:4px; background:transparent; padding:1px 2px; color:#cbd5e1; font-weight:500}
+  .chip.wk i{width:5px; height:5px; border-radius:50%; flex:0 0 5px; display:inline-block}
+  .c-school{background:rgba(59,130,246,.34); color:#dbeafe}
+  .c-trip{background:rgba(139,92,246,.34); color:#ede9fe}
+  .c-swim{background:rgba(6,182,212,.3); color:#cffafe}
+  .c-birthday{background:rgba(245,158,11,.3); color:#fef3c7}
+  .c-break{background:rgba(16,185,129,.26); color:#d1fae5}
+  .c-money{background:rgba(234,88,12,.3); color:#ffedd5}
+  .c-music{background:rgba(139,92,246,.28); color:#ede9fe}
+  .c-tutor{background:rgba(16,185,129,.24); color:#d1fae5}
 
   .day-panel{
     background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px;
@@ -456,9 +460,10 @@
     .clock{font-size:30px}
     .hcard{min-height:0; padding:16px}
     .cal-grid{gap:3px}
-    .day{min-height:54px; padding:3px 2px}
-    .day .num{width:18px; height:18px; font-size:10px}
-    .chip{font-size:8px; padding:1px 2px}
+    .day{min-height:66px; padding:3px; border-radius:7px}
+    .day .num{width:19px; height:19px; font-size:11px}
+    .chip{font-size:9px; padding:1px 3px; line-height:1.4}
+    .chip.wk{font-size:8.5px; gap:3px; padding:0 1px}
     .dex-grid{grid-template-columns:repeat(auto-fill,minmax(126px,1fr)); gap:10px}
     .star{font-size:30px}
     .big-stars .star{font-size:40px}
@@ -728,11 +733,37 @@
     { s:"2027-02-24", e:"2027-02-26", title:"율 무이네 수련회", time:"2박 3일", ic:"🏕️", cls:"c-school", meta:"학교 주관" },
     { s:"2027-03-26", e:"2027-03-26", title:"율 생일", time:"종일", ic:"🎂", cls:"c-birthday", meta:"생일" },
     { s:"2027-04-14", e:"2027-04-14", title:"2학기 종업식", time:"종일", ic:"📗", cls:"c-school", meta:"학사 일정" },
+    { s:"2027-04-15", e:"2027-05-03", title:"봄방학", time:"방학", ic:"🌱", cls:"c-break", meta:"5/4 3학기 개학" },
     { s:"2027-05-04", e:"2027-05-04", title:"3학기 개학", time:"종일", ic:"🏫", cls:"c-school", meta:"학사 일정" },
     { s:"2027-06-25", e:"2027-06-25", title:"학년말 종업식", time:"종일", ic:"🎓", cls:"c-school", meta:"학사 일정" }
   ];
   function parseD(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
-  var EVENTS = RAW.map(function(ev){ ev.start=parseD(ev.s); ev.end=parseD(ev.e); return ev; });
+  var SHORT = {
+    "휴교 (베트남 문화의 날)":"휴교",
+    "학부모 설문 마감":"설문 마감",
+    "싱가포르 가족여행":"싱가포르",
+    "학교 크리스마스 바자":"크리스마스 바자",
+    "디지털 웰빙 워크숍":"디지털 웰빙",
+    "커뮤니티 축구 대회":"축구 대회",
+    "크리스마스 캐롤 행사":"캐롤 행사",
+    "겨울 · 크리스마스 방학":"겨울방학",
+    "2학기 등록금 납부 기한":"등록금 마감",
+    "주니어 수영 10회":"주니어 수영",
+    "수영대회 (스프린트)":"수영대회",
+    "서균 무이네 수련회":"서균 무이네",
+    "율 무이네 수련회":"율 무이네",
+    "멜버른 가족여행":"멜버른",
+    "태국 수영대회":"태국 수영대회"
+  };
+  var EVENTS = RAW.map(function(ev){
+    ev.start=parseD(ev.s); ev.end=parseD(ev.e); ev.short = SHORT[ev.title] || ev.title; return ev;
+  });
+  var NO_SCHOOL = ["2026-11-24"];
+  function isBreak(d){
+    var k = ymd(d);
+    return EVENTS.some(function(ev){ return ev.cls === "c-break" && k >= ev.s && k <= ev.e; });
+  }
+  function isNoSchool(d){ return NO_SCHOOL.indexOf(ymd(d)) >= 0; }
 
   /* ── 요일 고정 일정 ───────────────────────── */
   var WEEKLY = {
@@ -801,11 +832,20 @@
     var out = [];
     EVENTS.forEach(function(ev){
       if(d >= ev.start && d <= ev.end){
-        out.push({ title:ev.title, who:"", time:ev.time, cls:ev.cls, ic:ev.ic, meta:ev.meta, kind:"event", sort:0 });
+        out.push({ title:ev.title, short:ev.short, who:"", time:ev.time, cls:ev.cls, ic:ev.ic, meta:ev.meta, kind:"event", sort:0 });
       }
     });
-    (WEEKLY[d.getDay()] || []).forEach(function(w){
-      out.push({ title:w.title, who:w.who, time:w.s, end:w.e, cls:w.cls, ic:w.ic, kind:"weekly", sort:1,
+    var brk = isBreak(d), wdd = d.getDay();
+    (WEEKLY[wdd] || []).forEach(function(w){
+      if(brk){
+        // 방학 기간: 목요일 '수영 교정'만 남김
+        if(wdd === 4){
+          out.push({ title:"수영 교정", short:"수영 교정", who:w.who, time:w.s, end:w.e, cls:w.cls, ic:w.ic, kind:"weekly", sort:1,
+            meta:w.s+"–"+w.e+(w.who? " · "+w.who : "") });
+        }
+        return;
+      }
+      out.push({ title:w.title, short:w.title, who:w.who, time:w.s, end:w.e, cls:w.cls, ic:w.ic, kind:"weekly", sort:1,
         meta:w.s+"–"+w.e+(w.who? " · "+w.who : "") });
     });
     return out.sort(function(a,b){
@@ -1005,19 +1045,26 @@
       var items = dayItems(d);
       var cls = "day";
       if(d.getMonth() !== viewMonth.getMonth()) cls += " out";
+      if(isBreak(d)) cls += " vac";
+      if(isNoSchool(d)) cls += " hol";
       if(sameDay(d, today)) cls += " today";
       if(sameDay(d, selected)) cls += " sel";
       var chips = items.slice(0,2).map(function(it){
-        var label = it.kind === "weekly" ? it.time+" "+it.title : it.title;
-        return '<span class="chip '+it.cls+'">'+escapeHtml(label)+'</span>';
+        if(it.kind === "weekly"){
+          var dot = it.cls === "c-swim" ? "#22d3ee" : (it.cls === "c-music" ? "#a78bfa" : "#34d399");
+          return '<span class="chip wk"><i style="background:'+dot+'"></i>'+escapeHtml(it.time+" "+it.title)+'</span>';
+        }
+        return '<span class="chip '+it.cls+'">'+escapeHtml(it.short || it.title)+'</span>';
       }).join("");
-      if(items.length>2) chips += '<span class="chip" style="background:rgba(148,163,184,.18);color:#cbd5e1">+'+(items.length-2)+'</span>';
+      if(items.length>2) chips += '<span class="chip wk" style="color:#94a3b8">+'+(items.length-2)+'개</span>';
       return '<div class="'+cls+'" data-date="'+ymd(d)+'" role="button" tabindex="0" aria-label="'+dayKo(d)+'">'+
         '<span class="num">'+d.getDate()+'</span>'+chips+'</div>';
     }).join("");
     renderDayPanel();
   }
   function busRows(d){
+    if(isNoSchool(d)) return { msg:"휴교일 · 스쿨버스 운행 없음" };
+    if(isBreak(d)) return { msg:"방학 기간 · 스쿨버스 운행 없음" };
     var wdd = d.getDay();
     if(wdd === 0 || wdd === 6) return null;
     var inWeek = ymd(d) >= BUS_WEEK.start && ymd(d) <= BUS_WEEK.end;
@@ -1036,9 +1083,8 @@
         return '<div class="dp-ev"><div class="n">'+(it.ic?it.ic+" ":"")+escapeHtml(it.title)+'</div>'+
           '<div class="m">'+escapeHtml(m)+'</div></div>';
       }).join("");
-      var inBreak = EVENTS.some(function(ev){ return ev.cls === "c-break" && selected >= ev.start && selected <= ev.end; });
-      if(inBreak && WEEKLY[selected.getDay()]){
-        box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간입니다 · 방과후 고정 일정은 달라질 수 있습니다</div>';
+      if(isBreak(selected)){
+        box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간 · 방과후 일정은 목요일 수영 교정만 표시됩니다</div>';
       }
     }
     var rows = busRows(selected);    if(!rows){
