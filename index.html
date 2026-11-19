@@ -483,7 +483,7 @@
 <div class="app">
 
   <nav class="rail" role="tablist" aria-label="가족 보드 메뉴">
-    <div class="brand" data-tab="home" title="우리 가족 보드">
+    <div class="brand" data-tab="home" title="YulGyun’s Family board">
       <img src="assets/chars/char8.webp?v=3" alt="보드 마스코트">
     </div>
     <button class="nav-btn active" data-tab="home" role="tab" aria-selected="true">
@@ -645,7 +645,7 @@
       </section>
 
       <footer class="foot">
-        <span>우리 가족 보드 · 가족 전용</span>
+        <span>YulGyun’s Family board</span>
         <span>·</span>
         <span>검색 노출 차단됨</span>
         <span>·</span>
@@ -854,9 +854,12 @@
     var brk = isBreak(d), wdd = d.getDay();
     (WEEKLY[wdd] || []).forEach(function(w){
       if(brk){
-        // 방학 기간: 목요일 '수영 교정'만 남김
+        // 방학 기간: 목요일 '수영 교정'과 피아노만 유지
         if(wdd === 4){
           out.push({ title:"수영 교정", short:"수영 교정", who:w.who, time:w.s, end:w.e, cls:w.cls, ic:w.ic, kind:"weekly", sort:1,
+            meta:w.s+"–"+w.e+(w.who? " · "+w.who : "") });
+        } else if(w.cls === "c-music"){
+          out.push({ title:w.title, short:w.title, who:w.who, time:w.s, end:w.e, cls:w.cls, ic:w.ic, kind:"weekly", sort:1,
             meta:w.s+"–"+w.e+(w.who? " · "+w.who : "") });
         }
         return;
@@ -1100,7 +1103,7 @@
           '<div class="m">'+escapeHtml(m)+'</div></div>';
       }).join("");
       if(isBreak(selected)){
-        box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간 · 방과후 일정은 목요일 수영 교정만 표시됩니다</div>';
+        box.innerHTML += '<div class="bus-note" style="margin-top:8px">방학 기간 · 피아노와 목요일 수영 교정만 표시됩니다</div>';
       }
     }
     var rows = busRows(selected);
